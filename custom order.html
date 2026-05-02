@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrap Pub Customizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/spr7oap.css">
+    <style>
+        :root {
+            --red: #E73929;
+            --orange: #F6892C;
+            --gold: #FECA65;
+            --cream: #FFE8BA;
+            --black: #111111;
+        }
+
+        /* Mobile-First Native App Setup */
+        body {
+            background-color: #333; 
+            font-family: "termina", sans-serif;
+            color: var(--black);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            height: 100vh;
+            height: 100dvh; 
+            overflow: hidden; 
+        }
+
+        /* Seamless App Container */
+        #phone-wrapper {
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            background-color: var(--cream);
+            background-image: radial-gradient(var(--black) 3px, transparent 0);
+            background-size: 45px 45px;
+            background-attachment: fixed; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Desktop Framing */
+        @media (min-width: 481px) {
+            body {
+                align-items: center; 
+            }
+            #phone-wrapper {
+                height: 90vh;
+                max-height: 896px;
+                border: 8px solid var(--black);
+                border-radius: 40px;
+                box-shadow: 0 0 50px rgba(0,0,0,0.5);
+                background-attachment: local;
+            }
+        }
+
+        /* Custom Neobrutalist Scrollbars */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--cream); border-left: 3px solid var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--red); border: 3px solid var(--black); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--orange); }
+
+        /* Hide Scrollbar for specific pages */
+        .no-scrollbar {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        #content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 25px 0 25px; 
+            z-index: 10;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            min-height: 0; 
+        }
+
+        .neobrutalist-btn {
+            background-color: var(--gold);
+            border: 4px solid var(--black);
+            box-shadow: 6px 6px 0px var(--black);
+            padding: 24px 20px;
+            text-transform: uppercase;
+            font-size: 1.2rem; 
+            font-weight: 800;
+            line-height: 1.1;
+            transition: transform 0.1s, box-shadow 0.1s;
+            cursor: pointer;
+            margin-bottom: 25px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .neobrutalist-btn:active {
+            box-shadow: 2px 2px 0px var(--black);
+            transform: translate(4px, 4px);
+        }
+
+        /* Thicker Homepage Buttons */
+        .neobrutalist-btn.main-btn {
+            padding: 28px 20px;
+            font-size: 1.35rem;
+            border-width: 5px;
+            box-shadow: 8px 8px 0px var(--black);
+            margin-bottom: 30px;
+        }
+        .neobrutalist-btn.main-btn:active {
+            box-shadow: 2px 2px 0px var(--black);
+            transform: translate(6px, 6px);
+        }
+
+        /* Seamless Bottom Marquee Block */
+        #marquee-area {
+            height: 54px;
+            width: 100%;
+            background-color: var(--gold);
+            border-top: 4px solid var(--black);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 12s linear infinite; 
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            color: var(--red);
+            font-weight: 900;
+            padding-top: 4px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .tab-arrow {
+            background: var(--black);
+            color: var(--gold);
+            border: 3px solid var(--black);
+            box-shadow: 3px 3px 0px var(--red);
+            width: 40px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .tab-arrow:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--red);
+        }
+
+        .tabs-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 0;
+            border: 4px solid var(--black);
+            background: white;
+            box-shadow: 4px 4px 0px var(--black);
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        
+        .tab-item {
+            flex: 0 0 auto;
+            padding: 10px 15px;
+            border-right: 3px solid var(--black);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: white;
+        }
+        .tab-item.active { background: var(--gold); }
+        .tab-item:last-child { border-right: none; }
+
+        .visualizer {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .glass-svg {
+            height: 150px;
+            overflow: visible !important; 
+        }
+
+        /* Enhanced Top-Down Pouring Animation */
+        .pour-group {
+            opacity: 0;
+            transition: opacity 0.15s ease-in;
+        }
+        .pouring .pour-group {
+            opacity: 1;
+        }
+        .pouring .pour-line {
+            animation: flowDown 0.3s linear infinite;
+        }
+        @keyframes flowDown {
+            from { stroke-dashoffset: 30; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .liquid-layer {
+            transition: height 0.8s ease-out, y 0.8s ease-out, fill 0.6s ease, opacity 0.4s ease;
+        }
+
+        .liquid-container {
+            transform-origin: bottom center;
+            animation: liquidBreathing 4s ease-in-out infinite alternate;
+        }
+        @keyframes liquidBreathing {
+            0% { transform: scaleY(1) skewX(0deg); }
+            100% { transform: scaleY(1.03) skewX(1deg); }
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: white;
+            border: 3px solid var(--black);
+            padding: 6px 10px;
+            display: inline-block;
+            margin-bottom: 14px;
+            box-shadow: 3px 3px 0px var(--black);
+        }
+
+        .checkbox-item {
+            background: white;
+            border: 4px solid var(--black);
+            padding: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 4px 4px 0px var(--black);
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .checkbox-item.selected { background: var(--gold); }
+        .check-box { 
+            width: 24px; 
+            height: 24px; 
+            border: 3px solid var(--black); 
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .selected .check-box { background: var(--red); }
+        .selected .check-box::after { content: '✓'; color: white; font-size: 16px; margin-top: -2px; }
+
+        .slider-container { margin: 10px 0 20px 0; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { height: 24px; background: var(--red); border: 4px solid var(--black); box-shadow: 4px 4px 0px var(--black); }
+        input[type=range]::-webkit-slider-thumb { height: 48px; width: 28px; border: 4px solid var(--black); background: var(--gold); cursor: pointer; -webkit-appearance: none; margin-top: -15px; box-shadow: 4px 4px 0px var(--black); }
+
+        .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 20px; }
+        .mini-card {
+            background: white; border: 3px solid var(--black); padding: 10px; text-align: center; font-size: 0.65rem; font-weight: 700;
+            box-shadow: 4px 4px 0px var(--black); cursor: pointer; text-transform: uppercase;
+        }
+        .mini-card.selected { background: var(--red); color: white; }
+
+        .vibe-btn {
+            background: white; border: 4px solid var(--black); padding: 16px 10px; text-align: center; font-size: 0.85rem; font-weight: 900;
+            box-shadow: 4px 4px 0px var(--black); cursor: pointer; text-transform: uppercase;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .vibe-btn.selected { 
+            background: var(--orange); color: var(--black); 
+            transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--black); 
+        }
+
+        .back-arrow { 
+            position: absolute; 
+            top: 25px; 
+            left: 20px; 
+            z-index: 50;
+            background-color: var(--black);
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--red);
+            transition: transform 0.1s, box-shadow 0.1s;
+            line-height: 1;
+            padding-right: 2px;
+            padding-bottom: 2px;
+        }
+        .back-arrow:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--red);
+        }
+        
+        .logo-img {
+            max-width: 220px;
+            height: auto;
+        }
+
+        /* Dedicated Scroll Area Container */
+        .scroll-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 4px;
+            padding-left: 4px;
+            padding-right: 12px;
+            padding-bottom: 20px;
+            margin-left: -4px;
+            width: calc(100% + 4px);
+        }
+
+        .checkout-bar {
+            padding: 15px 0 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 4px solid var(--black);
+            background: var(--cream);
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .summary-price-box {
+            background-color: white;
+            border: 4px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            padding: 12px 10px;
+            font-size: 1.2rem; 
+            font-weight: 900; 
+            color: var(--red);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Neobrutalist Input Field */
+        .table-input {
+            width: 100%;
+            background-color: white;
+            border: 4px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            padding: 15px 10px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--black);
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            box-sizing: border-box;
+            font-family: "termina", sans-serif;
+            text-transform: uppercase;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .table-input::placeholder {
+            color: rgba(0,0,0,0.3);
+        }
+        .table-input:focus {
+            box-shadow: 2px 2px 0px var(--black);
+            transform: translate(2px, 2px);
+        }
+
+        .title-box {
+            background-color: var(--red);
+            color: white;
+            border: 4px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        /* Help Info Card Styling */
+        .info-card {
+            background: white;
+            border: 4px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            cursor: default;
+        }
+
+        /* Top 3 Diagonal Badge */
+        .top3-badge {
+            position: absolute;
+            top: -14px;
+            left: 5px;
+            background-color: var(--gold);
+            color: var(--black);
+            border: 3px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            padding: 4px 10px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            transform: rotate(-12deg);
+            z-index: 20;
+            letter-spacing: 1px;
+        }
+
+        /* Help Question Button */
+        .help-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 6px; 
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background-color: var(--gold);
+            border: 4px solid var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            z-index: 100;
+            color: var(--black);
+        }
+        .help-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px var(--black);
+        }
+
+        /* Shaker Animation Keyframes */
+        @keyframes aggressiveShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-3px, -8px) rotate(-8deg); }
+            50% { transform: translate(0, 0) rotate(0deg); }
+            75% { transform: translate(3px, 8px) rotate(8deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="phone-wrapper">
+        <div id="nav-header"></div>
+        
+        <div id="content-area">
+            <!-- Dynamic Screens Render Here -->
+        </div>
+        
+        <div id="marquee-area">
+            <div class="marquee-content">
+                MIX YOUR OWN MAGIC * SCRAP PUB * CUSTOM COCKTAIL * MIX YOUR OWN MAGIC * SCRAP PUB * CUSTOM COCKTAIL * MIX YOUR OWN MAGIC * SCRAP PUB * CUSTOM COCKTAIL * MIX YOUR OWN MAGIC * SCRAP PUB * CUSTOM COCKTAIL *
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.handleLogoError = function(img) {
+            img.style.display = 'none';
+            document.getElementById('fallback-logo').style.display = 'block';
+        };
+
+        const initialSelections = { 
+            glass: 'Rocks', cl: '2.5', base: '', vibe: '', ingredients: [], mixer: '', ice: 'No Ice', garnishes: [] 
+        };
+
+        const state = {
+            currentScreen: 'home',
+            activeTab: 'glass',
+            history: [],
+            previewCocktail: null,
+            cocktailName: '',
+            tableNumber: '',
+            isPouring: false,
+            selections: { ...initialSelections }
+        };
+
+        let lastTabScrollPosition = 0; 
+        let lastOptionsScrollPosition = 0;
+        let activeTabChanged = false; 
+
+        const tabs = [
+            { id: 'glass', label: 'Glass' },
+            { id: 'base', label: 'Alcohol' },
+            { id: 'cl', label: 'Cl' },
+            { id: 'vibe', label: 'Flavor' },
+            { id: 'mixer', label: 'Mixer' },
+            { id: 'garnish', label: 'Garnish' }
+        ];
+
+        const vibeOptions = {
+            'Sweet': ['Berry', 'Peach', 'Mango', 'Vanilla', 'Honey', 'Coconut'],
+            'Sour': ['Lemon', 'Lime', 'Green Apple', 'Yuzu', 'Cranberry', 'Pomegranate'],
+            'Spicy': ['Jalapeño', 'Ginger', 'Chili', 'Habanero', 'Cinnamon', 'Black Pepper'],
+            'Bitter': ['Coffee', 'Matcha', 'Bitters', 'Rosemary', 'Sage', 'Grapefruit']
+        };
+
+        const ingredientColors = {
+            'Berry': '#d11141', 'Peach': '#ffb347', 'Mango': '#ffcc5c', 'Vanilla': '#fdf5e6', 'Honey': '#ffbf00', 'Coconut': '#ffffff',
+            'Lemon': '#fff44f', 'Lime': '#32cd32', 'Green Apple': '#a4c639', 'Yuzu': '#f8d000', 'Cranberry': '#9e1b32', 'Pomegranate': '#c0392b',
+            'Jalapeño': '#4cbb17', 'Ginger': '#e1ad01', 'Chili': '#ff0000', 'Habanero': '#ff8c00', 'Cinnamon': '#8b4513', 'Black Pepper': '#111111',
+            'Coffee': '#3c2a21', 'Matcha': '#7ba05b', 'Bitters': '#6e260e', 'Rosemary': '#4a5d23', 'Sage': '#77815c', 'Grapefruit': '#ff8282',
+            'Banana': '#ffe135', 'Caramel': '#c68e17'
+        };
+
+        const mixerColors = {
+            'Pineapple': '#ffcc00',
+            'Cranberry': '#9e1b32',
+            'Grapefruit': '#ff8282',
+            'Apple Juice': '#e8d574',
+            'Lemonade': '#fff44f'
+        };
+
+        function getLiquidColor(ingredients, vibe, mixer) {
+            let combinedItems = [...ingredients];
+            if (mixer && mixerColors[mixer]) combinedItems.push(mixer);
+
+            if (combinedItems.length === 0) {
+                const vibeBase = { 'Sweet': '#F6892C', 'Sour': '#FECA65', 'Spicy': '#E73929', 'Bitter': '#5c3d2e' };
+                return vibeBase[vibe] || '#FECA65';
+            }
+            
+            let r=0, g=0, b=0;
+            combinedItems.forEach(item => {
+                const hex = ingredientColors[item] || mixerColors[item] || '#FFE8BA';
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                r += parseInt(result[1], 16);
+                g += parseInt(result[2], 16);
+                b += parseInt(result[3], 16);
+            });
+            const count = combinedItems.length;
+            return `rgb(${Math.round(r/count)}, ${Math.round(g/count)}, ${Math.round(b/count)})`;
+        }
+
+        function calculatePrice(clValue) {
+            const val = String(clValue);
+            if (val === '2.5') return 300;
+            if (val === '5') return 350;
+            if (val === '7.5') return 400;
+            if (val === '10') return 450;
+            return 300;
+        }
+
+        const glassData = {
+            'Rocks': { bowl: 'M20,30 L80,30 L75,100 L25,100 Z', stem: 'M25,100 L75,100 L75,110 L25,110 Z', bottomY: 100, topY: 30, rimL: 20, rimR: 80 },
+            'Tall': { bowl: 'M25,10 L75,10 L70,120 L30,120 Z', stem: '', bottomY: 120, topY: 10, rimL: 25, rimR: 75 },
+            'Coupe': { bowl: 'M10,20 Q50,90 90,20 Z', stem: 'M48,55 L48,110 L30,110 L70,110 L52,110 L52,55 Z', bottomY: 55, topY: 20, rimL: 10, rimR: 90 },
+            'Flute': { bowl: 'M35,10 L65,10 L60,70 L40,70 Z', stem: 'M48,70 L48,120 L35,120 L65,120 L52,120 L52,70 Z', bottomY: 70, topY: 10, rimL: 35, rimR: 65 },
+            'Hurricane': { bowl: 'M25,20 C40,50 20,80 25,110 L75,110 C80,80 60,50 75,20 Z', stem: 'M48,110 L48,125 L35,125 L65,125 L52,125 L52,110 Z', bottomY: 110, topY: 20, rimL: 25, rimR: 75 }
+        };
+
+        function renderDrinkSVG(config) {
+            const d = glassData[config.glass] || glassData['Rocks'];
+            const maxFill = d.bottomY - d.topY;
+            
+            let baseFill = 0;
+            if (config.base) baseFill += 0.25;
+            if (config.vibe) baseFill += 0.10;
+            if (config.ingredients.length > 0) baseFill += (config.ingredients.length * 0.05);
+            if (config.mixer) baseFill += 0.30;
+            if (config.ice !== 'No Ice' && config.ice !== '') baseFill += 0.15;
+            
+            const cl = parseFloat(config.cl);
+            const clMulti = 0.8 + ((cl - 2.5) / 7.5) * 0.4; 
+            
+            let fillPercent = baseFill * clMulti;
+            if (fillPercent > 0.95) fillPercent = 0.95;
+            if (fillPercent < 0) fillPercent = 0;
+            
+            const fillHeight = maxFill * fillPercent;
+            const rectY = d.bottomY - fillHeight;
+            const color = getLiquidColor(config.ingredients, config.vibe, config.mixer);
+
+            const liqCenterY = rectY + (fillHeight / 2);
+            const glassWidth = d.rimR - d.rimL;
+            const iceScale = Math.min(1, glassWidth / 40); 
+            
+            let iceSVGs = '';
+            if (config.ice === 'Big Cube' && fillPercent > 0.1) {
+                iceSVGs = `<g transform="translate(50, ${liqCenterY}) scale(${iceScale})">
+                    <rect x="-15" y="-15" width="30" height="30" fill="rgba(255,255,255,0.6)" stroke="white" stroke-width="2" rx="3" transform="rotate(10)"/>
+                </g>`;
+            } else if (config.ice === 'Standard' && fillPercent > 0.1) {
+                iceSVGs = `<g transform="translate(50, ${liqCenterY}) scale(${iceScale})">
+                    <rect x="-15" y="-20" width="20" height="20" fill="rgba(255,255,255,0.6)" stroke="white" stroke-width="2" rx="2" transform="rotate(5)"/>
+                    <rect x="5" y="-10" width="20" height="20" fill="rgba(255,255,255,0.6)" stroke="white" stroke-width="2" rx="2" transform="rotate(-15)"/>
+                    <rect x="-5" y="5" width="20" height="20" fill="rgba(255,255,255,0.6)" stroke="white" stroke-width="2" rx="2" transform="rotate(25)"/>
+                </g>`;
+            } else if (config.ice === 'Crushed' && fillPercent > 0.1) {
+                iceSVGs = `<g transform="translate(50, ${liqCenterY}) scale(${iceScale})">
+                    <polygon points="-15,-10 -5,-15 0,-5 -10,0" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="1"/>
+                    <polygon points="5,-12 15,-6 10,4 0,-2" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="1"/>
+                    <polygon points="20,-9 30,-4 25,6 15,1" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="1"/>
+                    <polygon points="-5,0 5,-5 10,10 0,15" fill="rgba(255,255,255,0.7)" stroke="white" stroke-width="1"/>
+                </g>`;
+            }
+
+            let garnishSVGs = '';
+            if (config.garnishes.includes('Salt Rim') || config.garnishes.includes('Sugar Rim')) {
+                const rimColor = config.garnishes.includes('Salt Rim') ? 'white' : 'rgba(255,255,255,0.7)';
+                garnishSVGs += `<path d="M${d.rimL - 2},${d.topY} L${d.rimR + 2},${d.topY}" stroke="${rimColor}" stroke-width="5" stroke-dasharray="2 4" stroke-linecap="round"/>`;
+            }
+            if (config.garnishes.includes('Orange')) {
+                garnishSVGs += `
+                    <g transform="translate(${d.rimR}, ${d.topY})">
+                        <circle cx="0" cy="0" r="12" fill="var(--orange)" stroke="var(--black)" stroke-width="2"/>
+                        <circle cx="0" cy="0" r="9" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                        <line x1="0" y1="-9" x2="0" y2="9" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                        <line x1="-7.8" y1="-4.5" x2="7.8" y2="4.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                        <line x1="-7.8" y1="4.5" x2="7.8" y2="-4.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                        <circle cx="0" cy="0" r="12" fill="none" stroke="var(--black)" stroke-width="2"/>
+                    </g>`;
+            }
+            if (config.garnishes.includes('Lime')) {
+                garnishSVGs += `
+                    <g transform="translate(${d.rimL}, ${d.topY})">
+                        <circle cx="0" cy="0" r="10" fill="#32cd32" stroke="var(--black)" stroke-width="2"/>
+                        <circle cx="0" cy="0" r="7.5" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+                        <line x1="0" y1="-7.5" x2="0" y2="7.5" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+                        <line x1="-6.5" y1="-3.75" x2="6.5" y2="3.75" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+                        <line x1="-6.5" y1="3.75" x2="6.5" y2="-3.75" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+                        <circle cx="0" cy="0" r="10" fill="none" stroke="var(--black)" stroke-width="2"/>
+                    </g>`;
+            }
+            if (config.garnishes.includes('Mint')) {
+                garnishSVGs += `
+                    <g transform="translate(${d.rimR - 10}, ${d.topY})">
+                        <path d="M0,0 Q-10,-15 0,-20 Q10,-15 0,0" fill="#32cd32" stroke="var(--black)" stroke-width="2"/>
+                        <path d="M0,0 Q-15,-5 -20,5 Q-10,10 0,0" fill="#32cd32" stroke="var(--black)" stroke-width="2"/>
+                        <path d="M0,0 Q15,-5 20,5 Q10,10 0,0" fill="#32cd32" stroke="var(--black)" stroke-width="2"/>
+                    </g>`;
+            }
+            if (config.garnishes.includes('Cherry')) {
+                const cherryY = Math.max(rectY, d.topY);
+                garnishSVGs += `
+                    <g transform="translate(50, ${cherryY})">
+                        <circle cx="0" cy="0" r="6" fill="#d11141" stroke="var(--black)" stroke-width="2"/>
+                        <path d="M0,-6 Q5,-20 15,-10" fill="none" stroke="var(--black)" stroke-width="2"/>
+                    </g>`;
+            }
+            if (config.garnishes.includes('Chili')) {
+                garnishSVGs += `
+                    <g transform="translate(${d.rimL + 5}, ${d.topY - 10}) rotate(-20)">
+                        <path d="M0,0 Q10,-15 20,5 Q10,0 0,0" fill="#E73929" stroke="var(--black)" stroke-width="2"/>
+                        <path d="M0,0 Q-5,-5 -3,-8" fill="none" stroke="#32cd32" stroke-width="2"/>
+                    </g>`;
+            }
+            if (config.garnishes.includes('Sour Patch')) {
+                garnishSVGs += `
+                    <g transform="translate(${d.rimR - 4}, ${d.topY})">
+                        <path d="M-4,0 C-4,-4 4,-4 4,0 L4,10 L6,10 L6,14 L1,14 L1,10 L-1,10 L-1,14 L-6,14 L-6,10 L-4,10 Z" fill="#ffb347" stroke="var(--black)" stroke-width="1.5" stroke-linejoin="round" transform="translate(0, -14) rotate(15)"/>
+                    </g>`;
+            }
+
+            const pouringClass = state.isPouring ? 'pouring' : '';
+
+            return `
+                <svg viewBox="0 0 100 130" class="glass-svg ${pouringClass}">
+                    <defs>
+                        <clipPath id="glassClip">
+                            <path d="${d.bowl}" />
+                        </clipPath>
+                    </defs>
+                    
+                    <!-- Dynamic Pour Stream positioned outside clip-path so it flows from top -->
+                    <g class="pour-group">
+                        <rect x="43" y="-300" width="14" height="${rectY + 305}" fill="${color}" stroke="var(--black)" stroke-width="3" />
+                        <line x1="50" y1="-300" x2="50" y2="${rectY}" stroke="white" stroke-width="4" stroke-dasharray="15 15" class="pour-line" />
+                    </g>
+
+                    <path d="${d.bowl}" fill="rgba(255,255,255,0.3)" stroke="none" />
+                    
+                    <g clip-path="url(#glassClip)">
+                        <g class="liquid-container" style="opacity: ${fillPercent > 0 ? 1 : 0}; transition: opacity 0.5s;">
+                            <rect x="0" y="${rectY}" width="100" height="${fillPercent === 0 ? 0 : fillHeight + 20}" fill="${color}" class="liquid-layer" />
+                        </g>
+                        ${iceSVGs}
+                    </g>
+                    
+                    <path d="${d.bowl} ${d.stem}" fill="none" stroke="var(--black)" stroke-width="3" stroke-linejoin="round" />
+                    ${garnishSVGs}
+                </svg>
+            `;
+        }
+
+        const screens = {
+            home: () => `
+                <div class="flex flex-col items-center justify-between flex-grow w-full pb-6 pt-4 relative">
+                    <div class="logo-container relative w-full flex justify-center flex-shrink-0 mt-6 mb-8" style="min-height: 80px;">
+                        <img src="logo.png" alt="Scrap Pub" class="logo-img" id="main-logo" onerror="window.handleLogoError(this)">
+                        <div id="fallback-logo" class="logo-shape" style="display:none; background:var(--black);color:white;padding:15px 20px;transform:rotate(-3deg);font-size:2rem;font-weight:900;">SCRAP<br>PUB</div>
+                    </div>
+                    
+                    <div class="w-full flex-shrink-0 flex flex-col justify-center mt-auto mb-auto">
+                        <div class="neobrutalist-btn main-btn" onclick="nav('customizer')">Customize<br>Your Order</div>
+                        <div class="neobrutalist-btn main-btn" onclick="nav('best')">Best Custom<br>Orders</div>
+                    </div>
+                    
+                    <div class="help-btn" onclick="nav('help')">?</div>
+                </div>
+            `,
+            help: () => `
+                <div class="title-box mt-16 flex-shrink-0">How to order</div>
+                <div class="scroll-area flex-grow w-full space-y-4 mb-4 px-1" style="padding-top: 10px;">
+                    <div class="info-card">
+                        <div class="text-red-600 font-black text-lg mb-1">1. CUSTOMIZE</div>
+                        <div class="text-[11px] font-bold leading-relaxed opacity-80">Mix your own magic! Choose your glass, potency, base, flavors, and garnishes to craft the perfect drink.</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="text-red-600 font-black text-lg mb-1">2. SCRAP RECOMMENDS</div>
+                        <div class="text-[11px] font-bold leading-relaxed opacity-80">Not feeling creative? These drinks were selected from the custom orders placed by users last month.</div>
+                    </div>
+                </div>
+                <div class="neobrutalist-btn mt-auto flex-shrink-0 !mb-6 w-full" style="background: white; color: var(--black);" onclick="goBack()">GOT IT!</div>
+            `,
+            best: () => `
+                <div class="title-box mt-16 flex-shrink-0 mb-2">Scrap Recommends</div>
+                <div class="text-center font-bold text-[11px] px-4 mb-4 flex-shrink-0 opacity-80 leading-snug">Selected for you from the custom orders placed by users last month!</div>
+                <div class="scroll-area space-y-6 w-full px-2 mb-4">
+                    ${top3Cocktails.map((c, index) => `
+                        <div class="neobrutalist-btn text-left !mb-0 flex justify-between items-center relative ${index === 0 ? 'mt-4' : ''}" style="background-color: var(--orange); padding: 24px 15px;" onclick="viewTop3(${c.id})">
+                            ${index === 0 ? `<div class="top3-badge">HOT 3</div>` : ''}
+                            <span class="text-lg font-black">${c.id}. ${c.name}</span>
+                            <span class="text-2xl font-black ml-4">&gt;</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `,
+            customizer: () => `
+                <div class="visualizer flex-shrink-0">${renderDrinkSVG(state.selections)}</div>
+
+                <div class="tabs-wrapper flex-shrink-0">
+                    <div class="tab-arrow" onclick="scrollTabs(-1)"> &lt; </div>
+                    <div class="tabs-container" id="tab-strip">
+                        ${tabs.map(tab => `
+                            <div class="tab-item ${state.activeTab === tab.id ? 'active' : ''}" id="tab-${tab.id}" onclick="setTab('${tab.id}')">
+                                ${tab.label}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="tab-arrow" onclick="scrollTabs(1)"> &gt; </div>
+                </div>
+
+                <div class="scroll-area flex-grow" id="options-scroll">
+                    ${renderTabContent()}
+                </div>
+
+                <div class="checkout-bar flex-shrink-0">
+                    <div class="text-2xl font-black text-red-600">${calculatePrice(state.selections.cl)} TRY</div>
+                    <div class="neobrutalist-btn !mb-0 !py-3 !text-sm !w-auto" style="background: var(--black); color: white; display: none;" id="bottom-checkout" onclick="nav('summary')">CHECKOUT</div>
+                </div>
+            `,
+            summary: () => `
+                <h2 class="text-2xl mt-16 mb-4 uppercase font-black text-center flex-shrink-0">Your Ticket</h2>
+                <div class="scroll-area flex-grow w-full px-1 mb-4">
+                    <div class="neobrutalist-btn text-center text-xs space-y-2 !p-4 !cursor-default mx-auto w-full" style="background: white;">
+                        <div class="border-b-2 border-black pb-2 mb-2 font-black text-sm">SCRAP PUB ORDER #882</div>
+                        <div><span class="text-red-600 font-bold">GLASS:</span> ${state.selections.glass}</div>
+                        <div><span class="text-red-600 font-bold">POTENCY:</span> ${state.selections.cl} CL</div>
+                        <div><span class="text-red-600 font-bold">BASE:</span> ${state.selections.base || 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">FLAVORS:</span> ${state.selections.ingredients.length > 0 ? state.selections.ingredients.join(', ') : 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">MIXER:</span> ${state.selections.mixer || 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">ICE:</span> ${state.selections.ice}</div>
+                        <div><span class="text-red-600 font-bold">FLAIR:</span> ${state.selections.garnishes.join(', ') || 'NONE'}</div>
+                    </div>
+                </div>
+                <div class="mt-auto flex flex-col items-center w-full flex-shrink-0 pb-6 pt-2">
+                    <input type="text" class="table-input" placeholder="NAME THE COCKTAIL" value="${state.cocktailName}" oninput="state.cocktailName = this.value">
+                    <input type="number" pattern="\\d*" inputmode="numeric" class="table-input" placeholder="ENTER TABLE NO" value="${state.tableNumber}" oninput="state.tableNumber = this.value" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <div class="summary-price-box">Total: ${calculatePrice(state.selections.cl)} TRY</div>
+                    <div class="neobrutalist-btn !mb-0 w-full" style="background: var(--black); color: var(--gold)" onclick="processOrder()">ORDER NOW</div>
+                </div>
+            `
+        };
+
+        const top3Cocktails = [
+            { id: 1, name: 'SOUR DREAM', config: { glass: 'Coupe', cl: '5', base: 'Gin', vibe: 'Sour', ingredients: ['Lemon'], mixer: 'Apple Juice', ice: 'No Ice', garnishes: ['Salt Rim', 'Cherry'] } },
+            { id: 2, name: 'BANANA REPUBLIC', config: { glass: 'Rocks', cl: '10', base: 'Vodka', vibe: 'Sweet', ingredients: ['Banana', 'Caramel'], mixer: 'Lemonade', ice: 'Big Cube', garnishes: ['Powdered Sugar'] } },
+            { id: 3, name: 'LOVER\'S POTION', config: { glass: 'Flute', cl: '2.5', base: 'Tequila', vibe: 'Sweet', ingredients: ['Berry'], mixer: 'Soda', ice: 'Standard', garnishes: ['Mint'] } }
+        ];
+
+        screens.top3Detail = () => {
+            const c = top3Cocktails.find(x => x.id === state.previewCocktail);
+            if (!c) return '';
+            return `
+                <div class="scroll-area no-scrollbar flex-grow w-full px-2 mt-16 pb-6 flex flex-col">
+                    <div class="text-center text-2xl font-black uppercase mb-2 flex-shrink-0">${c.name}</div>
+                    <div class="visualizer mt-2 mb-6 flex-shrink-0">${renderDrinkSVG(c.config)}</div>
+                    <div class="neobrutalist-btn text-center text-xs space-y-2 !p-4 !cursor-default mb-6 flex-shrink-0" style="background: white">
+                        <div class="border-b-2 border-black pb-1 mb-1 font-black uppercase">Ingredients</div>
+                        <div><span class="text-red-600 font-bold">GLASS:</span> ${c.config.glass}</div>
+                        <div><span class="text-red-600 font-bold">POTENCY:</span> ${c.config.cl} CL</div>
+                        <div><span class="text-red-600 font-bold">BASE:</span> ${c.config.base || 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">FLAVORS:</span> ${c.config.ingredients.join(', ') || 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">MIXER:</span> ${c.config.mixer || 'NONE'}</div>
+                        <div><span class="text-red-600 font-bold">ICE:</span> ${c.config.ice}</div>
+                        <div><span class="text-red-600 font-bold">GARNISH:</span> ${c.config.garnishes.join(', ') || 'None'}</div>
+                    </div>
+
+                    <div class="mt-auto flex flex-col items-center w-full flex-shrink-0 pt-2">
+                        <input type="number" pattern="\\d*" inputmode="numeric" class="table-input" placeholder="ENTER TABLE NO" value="${state.tableNumber}" oninput="state.tableNumber = this.value" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        <div class="summary-price-box">Total: ${calculatePrice(c.config.cl)} TRY</div>
+                        <div class="neobrutalist-btn w-full !mb-0" style="background: var(--gold);" onclick="processOrder()">ORDER</div>
+                    </div>
+                </div>
+            `;
+        };
+
+        screens.success = () => `
+            <div class="flex flex-col items-center justify-center h-full flex-grow pb-10">
+                <svg viewBox="0 0 100 150" style="width: 120px; height: auto; animation: aggressiveShake 0.4s infinite; filter: drop-shadow(6px 6px 0px var(--black)); margin-bottom: 40px;">
+                    <!-- Base (Sharp Trapezoid) -->
+                    <path d="M25,70 L35,145 L65,145 L75,70 Z" fill="#e0e0e0" stroke="var(--black)" stroke-width="4" stroke-linejoin="miter" />
+                    <!-- Lid Middle (Sharp Angles) -->
+                    <path d="M18,70 L82,70 L70,35 L30,35 Z" fill="#ffffff" stroke="var(--black)" stroke-width="4" stroke-linejoin="miter" />
+                    <!-- Top Cap (Metallic gray) -->
+                    <path d="M35,35 L65,35 L55,10 L45,10 Z" fill="#d0d0d0" stroke="var(--black)" stroke-width="4" stroke-linejoin="miter" />
+                    
+                    <!-- Harsh geometric highlight -->
+                    <polygon points="30,70 38,145 46,145 38,70" fill="white" />
+                    
+                    <!-- Smooth Action/Shake lines -->
+                    <path d="M12,45 C5,55 5,65 12,75" fill="none" stroke="var(--black)" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M88,95 C95,105 95,115 88,125" fill="none" stroke="var(--black)" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M18,110 C10,118 10,126 18,134" fill="none" stroke="var(--black)" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M82,30 C90,38 90,46 82,54" fill="none" stroke="var(--black)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div style="font-size: 1.8rem; font-weight: 900; text-align: center; text-transform: uppercase; color: var(--black); background: white; border: 4px solid var(--black); box-shadow: 6px 6px 0px var(--red); padding: 20px; line-height: 1.2;">
+                    Your order is<br>received!
+                </div>
+            </div>
+        `;
+
+        function renderTabContent() {
+            switch(state.activeTab) {
+                case 'glass':
+                    return `
+                        <div class="section-label">Choose Glass:</div>
+                        <div class="space-y-3">
+                            ${Object.keys(glassData).map(g => `
+                                <div class="checkbox-item ${state.selections.glass === g ? 'selected' : ''}" onclick="select('glass', '${g}')">
+                                    <span>${g}</span><div class="check-box"></div>
+                                </div>`).join('')}
+                        </div>`;
+                case 'cl':
+                    const clValueMap = { '2.5': 1, '5': 2, '7.5': 3, '10': 4 };
+                    const sliderValue = clValueMap[state.selections.cl] || 1;
+                    const clMessages = {
+                        '2.5': 'Something to take the edge off.',
+                        '5': 'Right in the sweet spot.',
+                        '7.5': "Getting bold, aren't we?",
+                        '10': 'Looks like you are not the driver today :)'
+                    };
+                    const msg = clMessages[state.selections.cl] || clMessages['2.5'];
+                    return `
+                        <div class="section-label">Potency Level:</div>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="4" step="1" value="${sliderValue}" oninput="updateCl(this.value)">
+                            <div class="flex justify-between mt-2 font-black text-lg"><span>2.5</span><span>5</span><span>7.5</span><span>10</span></div>
+                        </div>
+                        <div class="neobrutalist-btn !p-4 !text-3xl mt-8 !mb-4" style="background:white; pointer-events:none; border-style:dashed">${state.selections.cl} CL</div>
+                        <div class="text-red-600 font-black mt-2 text-center uppercase text-[12px] px-2 py-2 leading-snug bg-white border-2 border-black shadow-[2px_2px_0px_#111] mx-auto w-fit z-20 relative">${msg}</div>
+                    `;
+                case 'base':
+                    return `
+                        <div class="section-label">Base Alcohol:</div>
+                        ${['Vodka', 'Gin', 'Tequila', 'Whiskey', 'Rum', 'Non-Alcoholic'].map(item => `
+                        <div class="checkbox-item ${state.selections.base === item ? 'selected' : ''}" onclick="select('base', '${item}')">
+                            <span>${item}</span><div class="check-box"></div>
+                        </div>`).join('')}`;
+                case 'vibe':
+                    return `
+                        <div class="section-label">Mood & Flavor:</div>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            ${['Sweet', 'Sour', 'Spicy', 'Bitter'].map(v => `<div class="vibe-btn ${state.selections.vibe === v ? 'selected' : ''}" onclick="selectVibe('${v}')">${v}</div>`).join('')}
+                        </div>
+                        <div class="option-grid">
+                            ${state.selections.vibe ? vibeOptions[state.selections.vibe].map(opt => `<div class="mini-card ${state.selections.ingredients.includes(opt) ? 'selected' : ''}" onclick="toggleIngredient('${opt}')">${opt}</div>`).join('') : ''}
+                            <div class="col-span-2 text-center text-xs text-red-600 font-black mt-2 bg-white border-4 border-black p-3 shadow-[4px_4px_0px_#111] opacity-100">MAX 5 FLAVORS ACROSS ALL CATEGORIES</div>
+                        </div>`;
+                case 'mixer':
+                    return `
+                        <div class="section-label">Add Mixer:</div>
+                        ${['Soda', 'Tonic', 'Ginger Beer', 'Pineapple', 'Cranberry', 'Apple Juice', 'Lemonade'].map(m => `
+                        <div class="checkbox-item ${state.selections.mixer === m ? 'selected' : ''}" onclick="select('mixer', '${m}')"><span>${m}</span><div class="check-box"></div></div>`).join('')}`;
+                case 'garnish':
+                    return `
+                        <div class="section-label">Ice Setup:</div>
+                        <div class="option-grid mb-4">${['Crushed', 'Standard', 'Big Cube', 'No Ice'].map(i => `<div class="mini-card ${state.selections.ice === i ? 'selected' : ''}" onclick="select('ice', '${i}')">${i}</div>`).join('')}</div>
+                        <div class="section-label">Garnishes:</div>
+                        <div class="option-grid">${['Mint', 'Lime', 'Orange', 'Salt Rim', 'Sugar Rim', 'Sour Patch', 'Cherry', 'Chili', 'Powdered Sugar'].map(g => `<div class="mini-card ${state.selections.garnishes.includes(g) ? 'selected' : ''}" onclick="toggleGarnish('${g}')">${g}</div>`).join('')}</div>
+                    `;
+            }
+            return '';
+        }
+
+        function nav(s) { 
+            if (s !== state.currentScreen) state.history.push(state.currentScreen); 
+            state.currentScreen = s; 
+            render(); 
+        }
+
+        function goBack() { 
+            if (state.history.length > 0) { 
+                state.currentScreen = state.history.pop(); 
+                render(); 
+            } 
+        }
+
+        function viewTop3(id) {
+            state.previewCocktail = id;
+            nav('top3Detail');
+        }
+
+        function processOrder() {
+            if (!state.tableNumber || state.tableNumber.trim() === '') {
+                alert('Please enter your table number to proceed!');
+                return;
+            }
+            nav('success');
+            setTimeout(() => {
+                resetAndHome();
+            }, 3000);
+        }
+
+        function setTab(t) { 
+            state.activeTab = t; 
+            activeTabChanged = true;
+            render(); 
+        }
+
+        let pouringTimeout = null;
+        function triggerPourAnimation() {
+            state.isPouring = true;
+            render();
+            if (pouringTimeout) clearTimeout(pouringTimeout);
+            pouringTimeout = setTimeout(() => {
+                state.isPouring = false;
+                render();
+            }, 600);
+        }
+
+        function select(k, v) { 
+            state.selections[k] = v; 
+            if (k === 'base') {
+                triggerPourAnimation();
+            } else {
+                render(); 
+            }
+        }
+
+        function selectVibe(v) {
+            state.selections.vibe = v;
+            render();
+        }
+
+        function toggleIngredient(opt) {
+            const idx = state.selections.ingredients.indexOf(opt);
+            if (idx > -1) {
+                state.selections.ingredients.splice(idx, 1);
+            } else {
+                if (state.selections.ingredients.length >= 5) {
+                    alert('Max 5 flavors allowed in total!');
+                    return;
+                }
+                state.selections.ingredients.push(opt);
+            }
+            render();
+        }
+
+        function toggleGarnish(v) { 
+            const idx = state.selections.garnishes.indexOf(v); 
+            if (idx > -1) state.selections.garnishes.splice(idx, 1); 
+            else { state.selections.garnishes.push(v); }
+            render(); 
+        }
+
+        function updateCl(v) { 
+            state.selections.cl = { '1': '2.5', '2': '5', '3': '7.5', '4': '10' }[v] || '2.5'; 
+            render(); 
+        }
+
+        function resetAndHome() {
+            state.selections = { ...initialSelections, ingredients: [], garnishes: [] };
+            state.activeTab = 'glass';
+            state.history = [];
+            state.cocktailName = '';
+            state.tableNumber = '';
+            nav('home');
+        }
+
+        function scrollTabs(dir) {
+            const container = document.querySelector('.tabs-container');
+            if (container) container.scrollBy({ left: dir * 100, behavior: 'smooth' });
+        }
+
+        function render() {
+            const container = document.getElementById('content-area');
+            const header = document.getElementById('nav-header');
+            const marquee = document.getElementById('marquee-area');
+            
+            const tabStrip = document.getElementById('tab-strip');
+            if (tabStrip) lastTabScrollPosition = tabStrip.scrollLeft;
+            
+            const optScroll = document.getElementById('options-scroll');
+            if (optScroll) lastOptionsScrollPosition = optScroll.scrollTop;
+
+            header.innerHTML = (state.currentScreen !== 'home' && state.currentScreen !== 'success' && state.currentScreen !== 'help') ? `<div class="back-arrow" onclick="goBack()">&lt;</div>` : '';
+            container.innerHTML = screens[state.currentScreen]();
+            
+            if (marquee) {
+                marquee.style.display = (state.currentScreen === 'summary' || state.currentScreen === 'success' || state.currentScreen === 'help') ? 'none' : 'flex';
+            }
+            
+            if (state.currentScreen === 'customizer') {
+                const newTabStrip = document.getElementById('tab-strip');
+                if (newTabStrip) {
+                    if (activeTabChanged) {
+                        const el = document.getElementById(`tab-${state.activeTab}`); 
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); 
+                        activeTabChanged = false;
+                    } else {
+                        newTabStrip.scrollLeft = lastTabScrollPosition;
+                    }
+                }
+
+                const newOptScroll = document.getElementById('options-scroll');
+                if (newOptScroll) newOptScroll.scrollTop = lastOptionsScrollPosition;
+                
+                const checkout = document.getElementById('bottom-checkout');
+                if (checkout) checkout.style.display = (state.activeTab === 'garnish') ? 'block' : 'none';
+            }
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>
